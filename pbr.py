@@ -2,9 +2,20 @@ import praw
 import discord
 import asyncio
 import os
+from discord import Option
 
 bot = discord.Bot()
 
+"""
+Make a new Reddit app, paste your
+client ID, client secret, and user
+agent in separate environment
+variables, with the variable names
+matching what I have provided. You
+can make your own variable names,
+but be sure it starts with "praw_"
+and change the ones here, too.
+"""
 reddit = praw.Reddit(
     client_id = f"{os.getenv('praw_CLIENT_ID')}",
     client_secret = f"{os.getenv('praw_CLIENT_SECRET')}",
@@ -19,59 +30,58 @@ async def on_ready():
 description="Send a specified amount of posts from a subreddit!")
 async def subreddit(ctx,
                 subreddit: Option(str, description="Pick a subreddit", required=True),
-                category: Option(str, description="Sort by?", required=True,
-                                 choices=[
-                                  "Top",
-                                  "Best", 
-                                  "Hot", 
-                                  "Rising", 
-                                  "New", 
-                                  "Controversial"
-                                 ]
+                category: Option(str, description="Sort by?", required=True, choices=[
+                                                                                "Top",
+                                                                                "Best", 
+                                                                                "Hot", 
+                                                                                "Rising", 
+                                                                                "New", 
+                                                                                "Controversial"
+                                                                             ]
                                 ),
                 amount: Option(int, description="How many posts to send?", required=True)):
     # I apologize for the boilerplate code
-    match sort:
-        case category=="Top":
+    match category:
+        case "Top":
             for submission in reddit.subreddit(f"{subreddit}").top(limit=amount):
-                await ctx.channel.send(f'''"{submission.title}"\n'''
+                await ctx.send(f'''"{submission.title}"\n'''
                                        f"by `u/{submission.author}` "
-                                       f"with {submission.score}\n"
+                                       f"with {submission.score} upvotes\n"
                                        f"{submission.url}")
                 await asyncio.sleep(1)
-        case category=="Best":
+        case "Best":
             for submission in reddit.subreddit(f"{subreddit}").best(limit=amount):
-                await ctx.channel.send(f'''"{submission.title}"\n'''
+                await ctx.send(f'''"{submission.title}"\n'''
                                        f"by `u/{submission.author}` "
-                                       f"with {submission.score}\n"
+                                       f"with {submission.score} upvotes\n"
                                        f"{submission.url}")
                 await asyncio.sleep(1)
-        case category=="Hot":
+        case "Hot":
             for submission in reddit.subreddit(f"{subreddit}").hot(limit=amount):
-                await ctx.channel.send(f'''"{submission.title}"\n'''
+                await ctx.send(f'''"{submission.title}"\n'''
                                        f"by `u/{submission.author}` "
-                                       f"with {submission.score}\n"
+                                       f"with {submission.score} upvotes\n"
                                        f"{submission.url}")
                 await asyncio.sleep(1)
-        case category=="Rising":
+        case "Rising":
             for submission in reddit.subreddit(f"{subreddit}").rising(limit=amount):
-                await ctx.channel.send(f'''"{submission.title}"\n'''
+                await ctx.send(f'''"{submission.title}"\n'''
                                        f"by `u/{submission.author}` "
-                                       f"with {submission.score}\n"
+                                       f"with {submission.score} upvotes\n"
                                        f"{submission.url}")
                 await asyncio.sleep(1)
-        case category=="New":
+        case "New":
             for submission in reddit.subreddit(f"{subreddit}").new(limit=amount):
-                await ctx.channel.send(f'''"{submission.title}"\n'''
+                await ctx.send(f'''"{submission.title}"\n'''
                                        f"by `u/{submission.author}` "
-                                       f"with {submission.score}\n"
+                                       f"with {submission.score} upvotes\n"
                                        f"{submission.url}")
                 await asyncio.sleep(1)
-        case category=="Controversial":
+        case "Controversial":
             for submission in reddit.subreddit(f"{subreddit}").controversial(limit=amount):
-                await ctx.channel.send(f'''"{submission.title}"\n'''
+                await ctx.send(f'''"{submission.title}"\n'''
                                        f"by `u/{submission.author}` "
-                                       f"with {submission.score}\n"
+                                       f"with {submission.score} upvotes\n"
                                        f"{submission.url}")
                 await asyncio.sleep(1)
 
