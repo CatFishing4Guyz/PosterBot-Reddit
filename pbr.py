@@ -29,60 +29,68 @@ async def on_ready():
 @bot.slash_command(guild_ids=[831412377869221899],
 description="Send a specified amount of posts from a subreddit!")
 async def subreddit(ctx,
-                subreddit: Option(str, description="Pick a subreddit", required=True),
-                category: Option(str, description="Sort by?", required=True, choices=[
-                                                                                "Top",
-                                                                                "Best", 
-                                                                                "Hot", 
-                                                                                "Rising", 
-                                                                                "New", 
-                                                                                "Controversial"
-                                                                             ]
-                                ),
-                amount: Option(int, description="How many posts to send?", required=True)):
-    # I apologize for the boilerplate code
+                    subreddit: Option(str, description='''The "r/" part is optional"''', required=True),
+                    category: Option(str, description="Sort by?", required=True, choices=[
+                                                                                    "Top",
+                                                                                    "Best", 
+                                                                                    "Hot", 
+                                                                                    "Rising", 
+                                                                                    "New", 
+                                                                                    "Controversial"
+                                                                                 ]
+                                    ),
+                    amount: Option(int, description="How many posts to send?", required=True)):
+    # I apologize for the boilerplate code, not much I can do
     match category:
         case "Top":
-            for submission in reddit.subreddit(f"{subreddit}").top(limit=amount):
-                await ctx.send(f'''"{submission.title}"\n'''
-                                       f"by `u/{submission.author}` "
-                                       f"with {submission.score} upvotes\n"
-                                       f"{submission.url}")
-                await asyncio.sleep(1)
-        case "Best":
-            for submission in reddit.subreddit(f"{subreddit}").best(limit=amount):
-                await ctx.send(f'''"{submission.title}"\n'''
-                                       f"by `u/{submission.author}` "
-                                       f"with {submission.score} upvotes\n"
-                                       f"{submission.url}")
-                await asyncio.sleep(1)
+            for Post in reddit.subreddit(f"{subreddit.strip('r/')}").top(limit=amount):
+                post = (f"> **{Post.title}**\n"
+                        f"by `u/{Post.author}` "
+                        f"with {Post.score} upvotes\n\n")
+                if Post.author is None:
+                    post = post.replace(str(None), "deleted")
+                post = post + f"> {Post.selftext}" if Post.is_self else post + f"> {Post.url}"
+                await ctx.send(post)
+                await asyncio.sleep(2)
         case "Hot":
-            for submission in reddit.subreddit(f"{subreddit}").hot(limit=amount):
-                await ctx.send(f'''"{submission.title}"\n'''
-                                       f"by `u/{submission.author}` "
-                                       f"with {submission.score} upvotes\n"
-                                       f"{submission.url}")
-                await asyncio.sleep(1)
+            for Post in reddit.subreddit(f"{subreddit.strip('r/')}").hot(limit=amount):
+                post = (f"> **{Post.title}**\n"
+                        f"by `u/{Post.author}` "
+                        f"with {Post.score} upvotes\n\n")
+                if Post.author is None:
+                    post = post.replace(str(None), "deleted")
+                post = post + f"> {Post.selftext}" if Post.is_self else post + f"> {Post.url}"
+                await ctx.send(post)
+                await asyncio.sleep(2)
         case "Rising":
-            for submission in reddit.subreddit(f"{subreddit}").rising(limit=amount):
-                await ctx.send(f'''"{submission.title}"\n'''
-                                       f"by `u/{submission.author}` "
-                                       f"with {submission.score} upvotes\n"
-                                       f"{submission.url}")
-                await asyncio.sleep(1)
+            for Post in reddit.subreddit(f"{subreddit.strip('r/')}").rising(limit=amount):
+                post = (f"> **{Post.title}**\n"
+                        f"by `u/{Post.author}` "
+                        f"with {Post.score} upvotes\n\n")
+                if Post.author is None:
+                    post = post.replace(str(None), "deleted")
+                post = post + f"> {Post.selftext}" if Post.is_self else post + f"> {Post.url}"
+                await ctx.send(post)
+                await asyncio.sleep(2)
         case "New":
-            for submission in reddit.subreddit(f"{subreddit}").new(limit=amount):
-                await ctx.send(f'''"{submission.title}"\n'''
-                                       f"by `u/{submission.author}` "
-                                       f"with {submission.score} upvotes\n"
-                                       f"{submission.url}")
-                await asyncio.sleep(1)
+            for Post in reddit.subreddit(f"{subreddit.strip('r/')}").new(limit=amount):
+                post = (f"> **{Post.title}**\n"
+                        f"by `u/{Post.author}` "
+                        f"with {Post.score} upvotes\n\n")
+                if Post.author is None:
+                    post = post.replace(str(None), "deleted")
+                post = post + f"> {Post.selftext}" if Post.is_self else post + f"> {Post.url}"
+                await ctx.send(post)
+                await asyncio.sleep(2)
         case "Controversial":
-            for submission in reddit.subreddit(f"{subreddit}").controversial(limit=amount):
-                await ctx.send(f'''"{submission.title}"\n'''
-                                       f"by `u/{submission.author}` "
-                                       f"with {submission.score} upvotes\n"
-                                       f"{submission.url}")
-                await asyncio.sleep(1)
+            for Post in reddit.subreddit(f"{subreddit.strip('r/')}").controversial(limit=amount):
+                post = (f"> **{Post.title}**\n"
+                        f"by `u/{Post.author}` "
+                        f"with {Post.score} upvotes\n\n")
+                if Post.author is None:
+                    post = post.replace(str(None), "deleted")
+                post = post + f"> {Post.selftext}" if Post.is_self else post + f"> {Post.url}"
+                await ctx.send(post)
+                await asyncio.sleep(2)
 
 bot.run(os.getenv('FOURTH_TOKEN'))
